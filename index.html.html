@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nikoxdemx</title>
+<style>
+
+  @font-face {
+    font-family: "pygame";
+    src: local("FreeSansBold"), local("FreeSans Bold"), url("freesansbold.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  :root {
+    --bg: #ffffff;
+    --fg: #111111;
+    --muted: #6b6b6b;
+    --line: #d9d9d9;
+    --accent: #2f4bff;
+    --tile: #f0f0f0;
+  }
+  :root[data-theme="dark"] {
+    --bg: #121316;
+    --fg: #f4f4f4;
+    --muted: #9a9a9a;
+    --line: #2c2d33;
+    --accent: #8fa0ff;
+    --tile: #1c1d22;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: 1rem; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "pygame", "Arial Black", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    line-height: 1.4;
+    transition: background .3s, color .3s;
+  }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 1.25rem 1.5rem 4rem; }
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--line);
+  }
+  .name { font-size: 1.25rem; letter-spacing: .02em; }
+
+  /*suwak*/
+  .switch { display: flex; align-items: center; gap: .6rem; font-size: .95rem; color: var(--muted); }
+  .switch input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 64px;
+    height: 30px;
+    margin: 0;
+    background: var(--tile);
+    border: 2px solid var(--fg);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .switch input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    margin-top: 0;
+    border-radius: 50%;
+    background: var(--fg);
+  }
+  .switch input[type="range"]::-moz-range-thumb {
+    width: 22px; height: 22px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--fg);
+  }
+  .switch input[type="range"]:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  h1 {
+    margin: 4rem 0 .5rem;
+    font-size: clamp(3rem, 12vw, 8rem);
+    line-height: 1;
+    font-weight: bold;
+    letter-spacing: -.02em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+  .tile {
+    margin: 0;
+    background: var(--tile);
+    border: 2px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .tile .img {
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+  }
+  
+  .tile img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: contain; }
+
+  .tile .open {
+    display: block; width: 100%; padding: 0; border: 0;
+    background: none; color: inherit; font: inherit; cursor: zoom-in;
+  }
+  .tile .open:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+
+  dialog.viewer {
+    border: 0; padding: 0; background: transparent;
+    max-width: 94vw; max-height: 94vh; overflow: visible; color: var(--fg);
+  }
+  dialog.viewer::backdrop { background: rgba(0,0,0,.8); }
+  .viewer .stage {
+    position: relative; background: var(--bg); border-radius: 8px;
+    width: min(90vw, 90vh); aspect-ratio: 1 / 1;
+    display: grid; place-items: center; overflow: hidden;
+  }
+  .viewer .stage img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .viewer .stage .ph { color: var(--muted); font-size: 1.5rem; }
+  .viewer .close {
+    position: absolute; top: .5rem; right: .5rem; width: 2.5rem; height: 2.5rem;
+    border: 2px solid var(--fg); border-radius: 50%;
+    background: var(--bg); color: var(--fg); font: inherit; font-size: 1.25rem; cursor: pointer;
+  }
+  .viewer .close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  footer { margin-top: 4rem; color: var(--muted); font-size: .9rem; }
+  a { color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    body { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="name">nikoxdemx</div>
+    <label class="switch">
+      <span>light</span>
+      <input id="theme" type="range" min="0" max="1" step="1" value="0" aria-label="Zmień motyw: light lub dark">
+      <span>dark</span>
+    </label>
+  </header>
+
+  <main>
+    <h1>portfolio</h1>
+
+    <section class="grid" aria-label="Projekty">
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+      <figure class="tile">
+        <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">.</div></button>
+      </figure>
+    </section>
+  </main>
+</div>
+
+<dialog class="viewer" id="viewer" aria-label="Podgląd logo">
+  <div class="stage" id="stage"></div>
+</dialog>
+
+<script>
+  var root = document.documentElement;
+  var slider = document.getElementById("theme");
+
+  function applyTheme(dark) {
+    root.setAttribute("data-theme", dark ? "dark" : "light");
+    slider.value = dark ? 1 : 0;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem("theme"); } catch (e) {}
+  if (saved === "dark" || saved === "light") {
+    applyTheme(saved === "dark");
+  } else {
+    applyTheme(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  }
+
+  slider.addEventListener("input", function () {
+    applyTheme(slider.value === "1");
+  });
+
+  var viewer = document.getElementById("viewer");
+  var stage = document.getElementById("stage");
+
+  function openViewer(tile) {
+    var img = tile.querySelector("img");
+    stage.innerHTML = "";
+    if (img) {
+      var big = document.createElement("img");
+      big.src = img.getAttribute("data-full") || img.src;
+      big.alt = img.alt;
+      stage.appendChild(big);
+    } else {
+      var ph = document.createElement("div");
+      ph.className = "ph";
+      ph.textContent = tile.querySelector(".img").textContent;
+      stage.appendChild(ph);
+    }
+    var close = document.createElement("button");
+    close.type = "button";
+    close.className = "close";
+    close.setAttribute("aria-label", "Zamknij");
+    close.textContent = "\u00d7";
+    close.addEventListener("click", function () { viewer.close(); });
+    stage.appendChild(close);
+    viewer.showModal();
+  }
+
+  document.querySelectorAll(".tile .open").forEach(function (btn) {
+    btn.addEventListener("click", function () { openViewer(btn.closest(".tile")); });
+  });
+
+  // kliknięcie w ciemne tło zamyka podgląd
+  viewer.addEventListener("click", function (e) { if (e.target === viewer) viewer.close(); });
+</script>
+</body>
+</html>
