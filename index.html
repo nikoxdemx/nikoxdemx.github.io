@@ -19,6 +19,11 @@
     --line: #d9d9d9;
     --accent: #2f4bff;
     --tile: #f0f0f0;
+    --b1: #f9ffab; --b2: #deceff; --b3: #ffc3c3;
+    --blob-op: .22;
+    --grain-op: .07;
+    --shadow: 0 1px 2px rgba(0,0,0,.06), 0 4px 8px rgba(0,0,0,.06), 0 12px 24px rgba(0,0,0,.08);
+    --shadow-hover: 0 2px 4px rgba(0,0,0,.08), 0 10px 20px rgba(0,0,0,.10), 0 24px 40px rgba(0,0,0,.14);
   }
   :root[data-theme="dark"] {
     --bg: #121316;
@@ -27,6 +32,11 @@
     --line: #2c2d33;
     --accent: #8fa0ff;
     --tile: #1c1d22;
+    --b1: #2f6bff; --b2: #1fae7a; --b3: #8fd3ff;
+    --blob-op: .2;
+    --grain-op: .1;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 4px 8px rgba(0,0,0,.3), 0 12px 24px rgba(0,0,0,.35);
+    --shadow-hover: 0 2px 4px rgba(0,0,0,.4), 0 10px 20px rgba(0,0,0,.4), 0 24px 40px rgba(0,0,0,.5);
   }
  
   * { box-sizing: border-box; }
@@ -117,6 +127,63 @@
     font-weight: bold;
     letter-spacing: -.02em;
   }
+
+  /*tlo*/
+  .bg {
+    position: fixed; inset: 0; z-index: -1;
+    overflow: hidden; pointer-events: none;
+  }
+  .blob {
+    position: absolute;
+    width: 55vmax; height: 55vmax;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: var(--blob-op);
+    will-change: transform;
+    transition: background .6s, opacity .6s;
+  }
+  .blob.b1 { background: var(--b1); top: -15vmax; left: -10vmax; animation: drift1 38s ease-in-out infinite alternate; }
+  .blob.b2 { background: var(--b2); top: 25vmax; right: -20vmax; animation: drift2 46s ease-in-out infinite alternate; }
+  .blob.b3 { background: var(--b3); bottom: -25vmax; left: 15vmax; animation: drift3 54s ease-in-out infinite alternate; }
+  @keyframes drift1 { from { transform: translate(0,0) scale(1); }   to { transform: translate(30vmax, 18vmax) scale(1.15); } }
+  @keyframes drift2 { from { transform: translate(0,0) scale(1.1); } to { transform: translate(-28vmax, -16vmax) scale(.9); } }
+  @keyframes drift3 { from { transform: translate(0,0) scale(.95); } to { transform: translate(22vmax, -20vmax) scale(1.2); } }
+  .grain {
+    position: absolute; inset: 0;
+    opacity: var(--grain-op);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /*sekcje*/
+  .section { margin-top: 3.5rem; }
+  .section:first-of-type { margin-top: 2rem; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: .9rem;
+    margin: 0 0 1.25rem;
+  }
+  .section-head h2 {
+    margin: 0;
+    font-size: clamp(1.75rem, 5vw, 3rem);
+    line-height: 1;
+    font-weight: bold;
+    letter-spacing: -.02em;
+  }
+  .section-head .num {
+    font-size: .95rem;
+    color: var(--muted);
+    letter-spacing: .05em;
+  }
+  .section-head::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--fg);
+    align-self: center;
+    border-radius: 1px;
+  }
  
   .grid {
     display: grid;
@@ -177,10 +244,17 @@
   @media (prefers-reduced-motion: reduce) {
     body { transition: none; }
     .top::after { animation: none; }
+    .blob { animation: none; }
   }
 </style>
 </head>
 <body>
+<div class="bg" aria-hidden="true">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+  <span class="grain"></span>
+</div>
 <div class="wrap">
   <header class="top">
     <div class="brand">
@@ -204,48 +278,88 @@
  
   <main>
     <h1>portfolio</h1>
- 
-    <section class="grid" aria-label="Projekty">
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="samomila.jpg" alt="Logo Samomiła Clinic"><img class="for-dark" src="samomilabiale.jpg" alt="Logo Samomiła Clinic"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="obrazsalon2.jpg" alt="salon"><img class="for-dark" src="obrazsalon2.jpg" alt="salon"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="GBbiale.jpg" alt="gb"><img class="for-dark" src="GBczarne.jpg" alt="gb"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="jasminabiale.jpg" alt=" jasmina"><img class="for-dark" src="jasminaczarne.jpg" alt="jasmina"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="obrazsalon.jpg" alt="obraz"><img class="for-dark" src="obrazsalon.jpg" alt="obraz"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="JWbiale.jpg" alt="JW"><img class="for-dark" src="JWczarne.jpg" alt="JW"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="wizgb.png" alt="wizytowki Gaba"><img class="for-dark" src="wizgb.png" alt="wizytowki Gaba"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="wizblue.png" alt="wiz"><img class="for-dark" src="wizblue.png" alt="wiz"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="wizkb.jpg" alt="wizytowki Kuba"><img class="for-dark" src="wizkb.jpg" alt="wizytowki kuba"></button>
-      </figure>
-      <figure class="tile">
-        <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="Asiabiale.png" alt="wizytowki Asia"><img class="for-dark" src="Asiabiale.png" alt="wizytowki Asia"></button>
-      </figure>
+
+    <section class="section" aria-labelledby="sec-logo">
+      <div class="section-head"><h2 id="sec-logo">logo</h2><span class="num">01</span></div>
+      <div class="grid">
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="samomila.jpg" alt="Logo Samomiła Clinic"><img class="for-dark" src="samomilabiale.jpg" alt="Logo Samomiła Clinic"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="wizkb.jpg" alt="Logo"><img class="for-dark" src="wizkb.jpg" alt="Logo"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="GBbiale.jpg" alt="Logo GB"><img class="for-dark" src="GBczarne.jpg" alt="Logo GB"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="jasminabiale.jpg" alt="Logo Jasmina"><img class="for-dark" src="jasminaczarne.jpg" alt="Logo Jasmina"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="" alt="wkrótce"><img class="for-dark" src="" alt="wkrótce"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="JWbiale.jpg" alt="Logo JW"><img class="for-dark" src="JWczarne.jpg" alt="Logo JW"></button>
+        </figure>
+      </div>
+    </section>
+
+    
+    <section class="section" aria-labelledby="sec-dtp">
+      <div class="section-head"><h2 id="sec-dtp">DTP</h2><span class="num">02</span></div>
+      <div class="grid">
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="wizgb.png" alt="Wizytówka"><img class="for-dark" src="wizgb.png" alt="Wizytówka"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="wizblue.png" alt="Wizytówka"><img class="for-dark" src="wizblue.png" alt="Wizytówka"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="wizSM.png" alt="Wizytówka"><img class="for-dark" src="wizSM.png" alt="Wizytówka"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="Asiabiale.png" alt="Wizytówka"><img class="for-dark" src="Asiabiale.png" alt="Wizytówka"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><img class="for-light" src="vouchersm.png" alt="Wizytówka"><img class="for-dark" src="vouchersm.png" alt="Wizytówka"></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">wkrótce</div></button>
+        </figure>
+      </div>
+    </section>
+
+
+    <section class="section" aria-labelledby="sec-social">
+      <div class="section-head"><h2 id="sec-social">social media</h2><span class="num">03</span></div>
+      <div class="grid">
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">wkrótce</div></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">wkrótce</div></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">wkrótce</div></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">wkrótce</div></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">wkrótce</div></button>
+        </figure>
+        <figure class="tile">
+          <button class="open" type="button" aria-label="Powiększ podgląd"><div class="img">wkrótce</div></button>
+        </figure>
+      </div>
     </section>
   </main>
  
   <footer>nikoxdemx</footer>
 </div>
  
-<dialog class="viewer" id="viewer" aria-label="Podgląd logo">
+<dialog class="viewer" id="viewer" aria-label="Podgląd">
   <div class="stage" id="stage"></div>
 </dialog>
-
 
 <script>
   var root = document.documentElement;
@@ -268,7 +382,6 @@
   slider.addEventListener("input", function () {
     applyTheme(slider.value === "1");
   });
- 
  
   var viewer = document.getElementById("viewer");
   var stage = document.getElementById("stage");
